@@ -77,16 +77,16 @@ You might also want to remove all the resources you create in [the section on im
 You need the following:
 * AWS_ACCESS_KEY_ID and AWS_SECRET_KEY_ID set to a working access key.
 * AWS_REGION set to the desired target region, for example "us-west-2".
-* A VPC with at least one subnet. Set the environment variable VPC_ID to this
-  VPC ID.
+* A VPC with at least one subnet, where your EKS cluster is installed. Set the
+  environment variable VPC_ID to this VPC ID.
 
 You can find the VPC ID using the following command:
 
     aws ec2 describe-vpcs
 
-Choose the right one and set VPC_ID.
+Choose the one that your EKS cluster uses and set VPC_ID to point to it.
 
-To list the subnets of the VPC:
+List the subnets of this VPC:
 
     aws ec2 describe-subnets \
     --filters Name=vpc-id,Values=$VPC_ID \

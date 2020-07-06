@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: image-cache-controller
+  name: image-cache-controller
+spec:
+  replicas: ${IMAGE_CACHE_CONTROLLER_REPLICAS}
+  selector:
+    matchLabels:
+      app: image-cache-controller
+  template:
+    metadata:
+      labels:
+        app: image-cache-controller
+    spec:
+      nodeSelector:
+        type: virtual-kubelet
+      tolerations:
+      - key: virtual-kubelet.io/provider
+        effect: NoSchedule
+        operator: Exists
+      containers:
+      - image: elotl/image-cache-controller
+        imagePullPolicy: IfNotPresent
+        name: image-cache-controller
+        env:
+        - name: CACHE_DIR
+          value: /var/cache/images
+        - name: NFS_ENDPOINT
+          value: ${NFS_VOLUME_ENDPOINT}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      serviceAccountName: image-cache-controller

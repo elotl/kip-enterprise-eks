@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- github.com/elotl/kip/deploy/manifests/kip/base?ref=v0.0.9
+namespace: ${NAMESPACE}
+resources:
+- image-cache-controller-deployment.yaml
+- image-cache-controller-sa.yaml
+patchesJson6902:
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: provider
+  path: patch-provider-statefulset.yaml
+images:
+- name: elotl/kip
+  newName: ${IMAGE_REGISTRY}/elotl/kip
+  newTag: ${IMAGE_TAG}
+- name: elotl/init-cert
+  newName: ${IMAGE_REGISTRY}/elotl/init-cert
+  newTag: ${IMAGE_TAG}
+- name: k8s.gcr.io/kube-proxy
+  newName: ${IMAGE_REGISTRY}/elotl/kube-proxy
+  newTag: ${IMAGE_TAG}
+- name: elotl/image-cache-controller
+  newName: ${IMAGE_REGISTRY}/elotl/image-cache-controller
+  newTag: ${IMAGE_TAG}
+- name: elotl/kip-aws-meteringagent
+  newName: ${IMAGE_REGISTRY}/elotl/kip-aws-meteringagent
+  newTag: ${IMAGE_TAG}
+configMapGenerator:
+- name: config
+  files:
+  - provider.yaml
+  behavior: merge

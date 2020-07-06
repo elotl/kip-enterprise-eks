@@ -1,0 +1,25 @@
+- op: replace
+  path: /spec/template/spec/containers/0/command
+  value:
+  - /kip
+  - --provider
+  - kip
+  - --provider-config
+  - /etc/kip/provider.yaml
+  - --network-agent-secret
+  - $(KIP_NAMESPACE)/$(NETWORK_AGENT_SERVICE_ACCOUNT)
+  - --klog.logtostderr
+  - --klog.v=2
+  - --metrics-addr=:10255
+  - --nodename=$(VKUBELET_NODE_NAME)
+- op: replace
+  path: /spec/template/spec/initContainers/0/command
+  value:
+  - bash
+  - -c
+  - mkdir -p $(CERT_DIR) && /opt/csr/get-cert.sh
+- op: add
+  path: /spec/template/spec/containers/-
+  value:
+    name: kip-aws-meteringagent
+    image: elotl/kip-aws-meteringagent

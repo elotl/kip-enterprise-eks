@@ -1,0 +1,30 @@
+apiVersion: v1
+cloud:
+  aws:
+    region: "${USE_REGION}"
+    accessKeyID: ""
+    secretAccessKey: ""
+    vpcID: ""
+    subnetID: ""
+etcd:
+  internal:
+    dataDir: /opt/kip/data
+cells:
+  bootImageSpec:
+    owners: 689494258501
+    filters: name=elotl-kip-*
+  defaultVolumeSize: "10G"
+  defaultInstanceType: t3.nano
+  nametag: ${NAME}
+  itzo:
+    url: https://itzo-kip-download.s3.amazonaws.com
+    version: latest
+  cellConfig:
+    imageCacheEndpoint: ${NFS_VOLUME_ENDPOINT}
+  extraSecurityGroups: ${EXTRA_SECURITY_GROUPS}
+kubelet:
+  capacity:
+    cpu: "100"
+    memory: "512Gi"
+    pods: "200"
+    nvidia.com/gpu: "50"

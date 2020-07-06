@@ -36,7 +36,7 @@ Set environment variables (modify if necessary):
 
     export NAME=kip
     export NAMESPACE=kip
-    export IMAGE_TAG=v0.1.0 # Change this to the version you want to install.
+    export IMAGE_TAG=v0.1.2 # Change this to the version you want to install.
 
 To be able to cache images and decrease pod start times, it is recommended that
 you use an [EFS volume](https://aws.amazon.com/efs/). You can specify the EFS
@@ -58,11 +58,137 @@ To deploy Kip, use the script:
     
 ### Uninstall
 
-To remove everything, first make sure you have terminated all [cells](https://github.com/elotl/kip/blob/master/docs/cells.md) started by Kip. Then simply:
+To remove everything, first make sure you have terminated all [cells](https://github.com/elotl/kip/blob/master/docs/cells.md) started by Kip via terminating all deployments, pods, etc running via Kip.
+
+To check pods running via Kip (use the right node name if it is not
+`kip-provider-0`):
+
+    kubectl get pods --field-selector spec.nodeName=kip-provider-0 -A
+
+Once no more pods are running via Kip:
 
     export NAMESPACE=kip # Namespace used for installation.
     kubectl delete namespace $NAMESPACE
 
+You might also want to remove all the resources you create in [the section on image caching](#enable-image-caching).
+
 ### Enable image caching
 
-TODO
+You need the following:
+* AWS_ACCESS_KEY_ID and AWS_SECRET_KEY_ID set to a working access key.
+* AWS_REGION set to the desired target region, for example "us-west-2".
+* A VPC with at least one subnet. Set the environment variable VPC_ID to this
+  VPC ID.
+
+You can find the VPC ID using the following command:
+
+    aws ec2 describe-vpcs
+
+Choose the right one and set VPC_ID.
+
+To list the subnets of the VPC:
+
+    aws ec2 describe-subnets \
+    --filters Name=vpc-id,Values=$VPC_ID \
+    --region $AWS_REGION
+
+Write down the subnet IDs of the VPC.
+
+Create a security group that will be attached to Kip cells:
+
+    aws ec2 create-security-group \
+    --region $AWS_REGION \
+    --group-name kip-cells \
+    --description "Kip Cells" \
+    --vpc-id $VPC_ID
+
+Note the security group ID from the response, and set `KIP_CELL_SG` to it:
+
+    {
+        "GroupId": "<kip-cells SG ID>"
+    }
+
+    export KIP_CELL_SG=<kip-cells SG ID>
+
+Create a second security group for your Amazon EFS mount target:
+
+    aws ec2 create-security-group \
+    --region $AWS_REGION \
+    --group-name kip-efs-mt \
+    --description "Kip EFS Mount Target" \
+    --vpc-id $VPC_ID
+
+    {
+        "GroupId": "<kip-efs-mt SG ID>"
+    }
+
+    export EFS_MT_SG=<kip-efs-mt SG ID>
+
+Authorize inbound access to the security group for the Amazon EFS mount target
+(kip-efs-mt):
+
+    aws ec2 authorize-security-group-ingress \
+    --group-id $EFS_MT_SG \
+    --protocol tcp \
+    --port 2049 \
+    --source-group $KIP_CELL_SG \
+    --region $AWS_REGION
+
+Create an EFS file system:
+
+    aws efs create-file-system \
+    --creation-token kip-efs-$RANDOM \
+    --tags Key=Name,Value=kip-efs \
+    --region $AWS_REGION
+
+Response:
+
+        {
+            "OwnerId": "123456789abcd",
+            "CreationToken": "kip-efs-24609",
+            "FileSystemId": "<EFS filesystem ID>",
+            "CreationTime": 1548950706.0,
+            "LifeCycleState": "creating",
+            "NumberOfMountTargets": 0,
+            "SizeInBytes": {
+                "Value": 0,
+                "ValueInIA": 0,
+                "ValueInStandard": 0
+            },
+            "PerformanceMode": "generalPurpose",
+            "Encrypted": false,
+            "ThroughputMode": "bursting",
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "kip-efs"
+                }
+            ]
+        }
+
+        export EFS_FS_ID=<EFS filesystem ID>
+
+Create mount targets in each subnet:
+
+    aws efs create-mount-target \
+    --file-system-id $EFS_FS_ID \
+    --subnet-id <subnet-id of VPC> \
+    --security-group $EFS_MT_SG \
+    --region $AWS_REGION
+
+Repeat this last step creating mount targets for each subnet in your VPC.
+
+Now that your EFS volume has been configured, you can deploy Kip:
+
+    export NFS_VOLUME_ENDPOINT=$EFS_FS_ID.efs.$AWS_REGION.amazonaws.com:/
+
+Deploy Kip the usual way:
+
+    export NAME=kip
+    export NAMESPACE=kip
+    export USE_REGION=$AWS_REGION
+    export IMAGE_TAG=v0.1.2 # Change this to the version you want to install.
+
+    ./kustomize/deploy.sh
+
+A deployment for the image cache controller will be started using the new EFS volume.

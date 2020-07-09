@@ -49,8 +49,16 @@ See [the section on image caching](#enable-image-caching) for more information.
 There are other variables you can use, but they are rarely needed to be changed
 from their defaults. Only change them if you know what you are doing.
 
-    export USE_REGION=us-west-2 # This is autodetected by Kip.
+    # Explicitly set a region to use.
+    export USE_REGION=us-west-2
+
+    # Image registry to pull images from.
     export IMAGE_REGISTRY=689494258501.dkr.ecr.us-east-1.amazonaws.com
+
+    # An existing instance profile that will be associated with cells by
+    # default. This can be overridden via the pod.elotl.co/instance-profile
+    # annotation in pod manifests.
+    export CELL_INSTANCE_PROFILE_ARN=arn:aws:iam::11123456789:instance-profile/kip-cell
 
 To deploy Kip, use the script:
 

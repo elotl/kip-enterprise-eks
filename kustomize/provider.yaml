@@ -21,6 +21,7 @@ cells:
     version: latest
   cellConfig:
     imageCacheEndpoint: ${NFS_VOLUME_ENDPOINT}
+    awsCWAgentClusterName: ${NAME}
   extraSecurityGroups: ${EXTRA_SECURITY_GROUPS}
   defaultIAMPermissions: ${CELL_INSTANCE_PROFILE_ARN}
 kubelet:

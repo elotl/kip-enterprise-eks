@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-export NAME=${NAME:-kip}
-export NAMESPACE=${NAME:-kip}
+export CLUSTER_NAME=${CLUSTER_NAME:-kip}
+export NAMESPACE=${NAMESPACE:-kip}
 export USE_REGION=${USE_REGION:-}
 export IMAGE_REGISTRY=${REGISTRY:-689494258501.dkr.ecr.us-east-1.amazonaws.com}
 export IMAGE_TAG=${TAG:-v0.1.0}

@@ -4,8 +4,7 @@ bases:
 - github.com/elotl/kip/deploy/manifests/kip/base?ref=v0.0.9
 namespace: ${NAMESPACE}
 resources:
-- image-cache-controller-deployment.yaml
-- image-cache-controller-sa.yaml
+- image-cache-controller.yaml
 patchesJson6902:
 - target:
     group: apps

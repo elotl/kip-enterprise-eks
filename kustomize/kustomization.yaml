@@ -5,6 +5,7 @@ bases:
 namespace: ${NAMESPACE}
 resources:
 - image-cache-controller.yaml
+- fluentd.yaml
 patchesJson6902:
 - target:
     group: apps

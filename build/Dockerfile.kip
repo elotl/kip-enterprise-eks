@@ -1,0 +1,10 @@
+FROM elotl/kip:v0.0.8 AS base
+
+FROM amazonlinux:latest
+
+RUN yum install -y ca-certificates iptables
+
+COPY --from=base /kip /
+COPY --from=base /kipctl /
+
+ENTRYPOINT ["/kip"]

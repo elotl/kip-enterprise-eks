@@ -1,0 +1,11 @@
+FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl/image-cache-controller:v0.0.8 AS base
+
+FROM amazonlinux
+
+RUN yum install -y nfs-utils rpcbind sysvinit-tools
+
+COPY --from=base /entrypoint.sh /
+COPY --from=base /usr/local/bin/tosi /usr/local/bin/
+COPY --from=base /usr/local/bin/image-cache-controller /usr/local/bin/
+
+ENTRYPOINT ["/entrypoint.sh"]

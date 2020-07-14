@@ -1,0 +1,12 @@
+FROM elotl/init-cert:v0.0.8 AS base
+
+FROM amazonlinux:latest
+
+RUN yum install -y curl gettext iproute jq openssl
+
+COPY --from=base /opt/csr /opt/csr
+COPY --from=base /opt/kubectl /opt/kubectl
+COPY --from=base /usr/local/bin/kubectl /usr/local/bin/
+COPY --from=base /usr/local/bin/token2kubeconfig /usr/local/bin/
+
+ENTRYPOINT ["/opt/csr/get-cert.sh"]

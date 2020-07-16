@@ -23,3 +23,15 @@
   value:
     name: kip-aws-meteringagent
     image: elotl/kip-aws-meteringagent
+    command:
+    - /kip-aws-meteringagent
+    - --stats-endpoint=http://$(POD_NAME):10255/stats
+    - --pods-endpoint=https://$(POD_NAME):10250/runningpods
+    env:
+    - name: CLUSTER_NAME
+      value: ${CLUSTER_NAME}
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name

@@ -1,4 +1,4 @@
-FROM k8s.gcr.io/kube-proxy:v1.18.5 AS base
+FROM k8s.gcr.io/kube-proxy:v1.18.6 AS base
 
 FROM amazonlinux:latest
 

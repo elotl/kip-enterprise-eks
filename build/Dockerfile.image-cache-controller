@@ -1,4 +1,4 @@
-FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl/image-cache-controller:v0.0.8 AS base
+FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl/image-cache-controller:v0.3.0 AS base
 
 FROM amazonlinux
 

@@ -1,4 +1,4 @@
-FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl/kip-aws-meteringagent:v0.0.9 AS base
+FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl/kip-aws-meteringagent:v1.0.0 AS base
 
 FROM amazonlinux
 

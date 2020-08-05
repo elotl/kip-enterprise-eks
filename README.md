@@ -36,7 +36,7 @@ Set environment variables (modify if necessary):
 
     export CLUSTER_NAME=kip # Name of your EKS cluster.
     export USE_REGION=us-west-2
-    export IMAGE_TAG=v0.1.2 # Change this to the version you want to install.
+    export IMAGE_TAG=v1.0.0  # Change this to the version you want to install.
 
 To be able to cache images and decrease pod start times, it is recommended that
 you use an [EFS volume](https://aws.amazon.com/efs/). You can specify the EFS

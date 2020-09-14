@@ -36,7 +36,7 @@ Set environment variables (modify if necessary):
 
     export CLUSTER_NAME=kip # Name of your EKS cluster.
     export USE_REGION=us-west-2
-    export IMAGE_TAG=v1.0.0  # Change this to the version you want to install.
+    export IMAGE_TAG=1.0-latest  # Change this to the version you want to install.
 
 To be able to cache images and decrease pod start times, it is recommended that
 you use an [EFS volume](https://aws.amazon.com/efs/). You can specify the EFS
@@ -53,7 +53,7 @@ from their defaults. Only change them if you know what you are doing.
     export NAMESPACE=elotl-kip
 
     # Image registry to pull images from.
-    export IMAGE_REGISTRY=689494258501.dkr.ecr.us-east-1.amazonaws.com
+    export IMAGE_REGISTRY=117940112483.dkr.ecr.us-east-1.amazonaws.com/4737f648-c51e-4cca-a3a5-afe7268bf539/cg-2196059056
 
     # An existing instance profile that will be associated with cells by
     # default. This can be overridden via the pod.elotl.co/instance-profile
@@ -195,7 +195,7 @@ Deploy Kip the usual way:
     export CLUSTER_NAME=kip
     export NAMESPACE=kip
     export USE_REGION=$AWS_REGION
-    export IMAGE_TAG=v0.1.2 # Change this to the version you want to install.
+    export IMAGE_TAG=1.0-latest # Change this to the version you want to install.
 
     ./kustomize/deploy.sh
 

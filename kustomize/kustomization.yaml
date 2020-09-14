@@ -16,19 +16,19 @@ patchesJson6902:
   path: patch-provider-statefulset.yaml
 images:
 - name: elotl/kip
-  newName: ${IMAGE_REGISTRY}/elotl/kip
+  newName: ${IMAGE_REGISTRY}/kip
   newTag: ${IMAGE_TAG}
 - name: elotl/init-cert
-  newName: ${IMAGE_REGISTRY}/elotl/init-cert
+  newName: ${IMAGE_REGISTRY}/init-cert
   newTag: ${IMAGE_TAG}
 - name: k8s.gcr.io/kube-proxy
-  newName: ${IMAGE_REGISTRY}/elotl/kube-proxy
+  newName: ${IMAGE_REGISTRY}/kube-proxy
   newTag: ${IMAGE_TAG}
 - name: elotl/image-cache-controller
-  newName: ${IMAGE_REGISTRY}/elotl/image-cache-controller
+  newName: ${IMAGE_REGISTRY}/image-cache-controller
   newTag: ${IMAGE_TAG}
 - name: elotl/kip-aws-meteringagent
-  newName: ${IMAGE_REGISTRY}/elotl/kip-aws-meteringagent
+  newName: ${IMAGE_REGISTRY}/kip-aws-meteringagent
   newTag: ${IMAGE_TAG}
 configMapGenerator:
 - name: config

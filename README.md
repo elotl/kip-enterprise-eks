@@ -21,7 +21,7 @@ Follow these instructions to install Kip Enterprise from the command line.
 
 ### Prerequisites
 
-- An EKS cluster
+- An EKS cluster, Kubernetes 1.16 or higher configured with [IAM Roles for Service Accounts}(https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
 - [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) >= 1.14, configured to access the EKS cluster
 - [kustomize](https://github.com/kubernetes-sigs/kustomize) >= 3.0.0
@@ -29,6 +29,83 @@ Follow these instructions to install Kip Enterprise from the command line.
 If you want to enable image caching, you also need an EFS or NFS server in
 your VPC. Image caching will decrease pod start up times, especially if the
 images used by your pods are large.
+
+### Create an IAM role for the kip service account
+
+1. Enable OIDC for service accounts in your cluster by following the instructions [here](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html).
+2. Create service account linked IAM role for Kip:
+
+Create an IAM role for the Kip pod and configure it with the following policy:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": [
+                "aws-marketplace:RegisterUsage",
+                "aws-marketplace:MeterUsage"
+                "ec2:ModifyVolume",
+                "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:DescribeInstances",
+                "ec2:TerminateInstances",
+                "ec2:CreateTags",
+                "ec2:DeleteRoute",
+                "ecr:GetAuthorizationToken",
+		"ecr:GetDownloadUrlForLayer",
+		"ecr:BatchGetImage",
+                "ec2:DescribeDhcpOptions",
+                "ec2:RunInstances",
+                "ec2:DescribeSecurityGroups",
+                "ec2:RevokeSecurityGroupIngress",
+                "ec2:DescribeImages",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DescribeAvailabilityZones",
+                "ec2:ModifyInstanceCreditSpecification",
+                "ec2:CreateRoute",
+                "ec2:DescribeVpcs",
+                "ec2:CreateSecurityGroup",
+                "ec2:DescribeVolumes",
+                "ec2:DeleteSecurityGroup",
+                "ec2:ModifyInstanceAttribute",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeRouteTables",
+                "ec2:AssociateIamInstanceProfile",
+                "iam:PassRole"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+Create a trust relationship on the IAM role, with the following fields replaced
+
+* Replace `$AWS_ACCOUNT_ID` with your AWS account ID (e.g. 123456789012)
+* Replace `$OIDC_PROVIDER` with your cluster's OIDC provider's URL (e.g. oidc.eks.us-east-1.amazonaws.com/id/AAAABBBBCCCCDDDDEEEEFFFF00001111)
+* Replace `$NAMESPACE` with the namespace kip will run in (defaults to kip)
+* Replace `KIP_SERVICE_ACCOUNT_NAME` with the name of the kip service account (defaults to "kip-provider")
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::$AWS_ACCOUNT_ID:oidc-provider/$OIDC_PROVIDER"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "$OIDC_PROVIDER:sub": "system:serviceaccount:$NAMESPACE:$BUILDSCALER_SERVICE_ACCOUNT_NAME"
+        }
+      }
+    }
+  ]
+}
+```
 
 ### Install from the command line
 

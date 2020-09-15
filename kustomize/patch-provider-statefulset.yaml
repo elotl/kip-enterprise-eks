@@ -28,7 +28,7 @@
     - --stats-endpoint=http://$(POD_NAME):10255/stats
     - --pods-endpoint=https://$(POD_NAME):10250/runningpods
     env:
-    - name: ENV PRODUCT_CODE
+    - name: PRODUCT_CODE
       value: 9iyga48767smc3nbdqo31qq5c
     - name: AWS_SDK_LOAD_CONFIG
       value: "1"

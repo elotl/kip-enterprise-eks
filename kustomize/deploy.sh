@@ -11,6 +11,7 @@ export NFS_VOLUME_ENDPOINT=${NFS_VOLUME_ENDPOINT:-}
 export IMAGE_CACHE_CONTROLLER_REPLICAS=$([[ -n "${NFS_VOLUME_ENDPOINT}" ]] && echo -n 1 || echo -n 0)
 export CELL_SECURITY_GROUP=${CELL_SECURITY_GROUP:-}
 export CELL_INSTANCE_PROFILE_ARN=${CELL_INSTANCE_PROFILE_ARN:-}
+export KIP_SERVICE_ACCOUNT_ROLE_ARN=${KIP_SERVICE_ACCOUNT_ROLE_ARN:-}
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -23,7 +24,6 @@ export EXTRA_SECURITY_GROUPS
     echo "KIP_SERVICE_ACCOUNT_ROLE_ARN must be set to the ARN of the kip IAM role created as a manual step in the README."
     exit 1
 }
-export KIP_SERVICE_ACCOUNT_ROLE_ARN
 
 kubectl version > /dev/null 2>&1 || {
     echo "Missing kubectl or configuration problem"

@@ -1,7 +1,8 @@
-FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl/kip-aws-meteringagent:v1.0.1 AS base
+FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl-dev/kip-aws-meteringagent:v1.0.3 AS base
 
 FROM amazonlinux
 
+ENV PRODUCT_CODE=9iyga48767smc3nbdqo31qq5c
 ENV PUBLIC_KEY_VERSION=1
 
 COPY --from=base /kip-aws-meteringagent /

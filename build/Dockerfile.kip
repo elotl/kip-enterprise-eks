@@ -1,4 +1,4 @@
-FROM elotl/kip:v1.0.0 AS base
+FROM elotl/kip:v1.0.2 AS base
 
 FROM amazonlinux:latest
 

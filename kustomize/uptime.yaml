@@ -40,12 +40,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: uptime
+      app: uptime
   replicas: 1
   template:
     spec:
+      metadata:
+        labels:
+          app: uptime
       serviceAccount: uptime
-      serviceAccountName: uptime
       containers:
       - command:
         - /kip-uptime

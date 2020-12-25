@@ -1,0 +1,7 @@
+FROM 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl-dev/kip-uptime:v1.0.0 AS base
+
+FROM amazonlinux
+
+COPY --from=base /kip-uptime /
+
+ENTRYPOINT ["/kip-uptime"]

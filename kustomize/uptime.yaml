@@ -43,10 +43,10 @@ spec:
       app: uptime
   replicas: 1
   template:
+    metadata:
+      labels:
+        app: uptime
     spec:
-      metadata:
-        labels:
-          app: uptime
       serviceAccount: uptime
       containers:
       - command:

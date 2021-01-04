@@ -51,7 +51,6 @@ spec:
       containers:
       - command:
         - /kip-uptime
-        - --namespace=${NAMESPACE}
         - --logtostderr
         - --v=5
         name: kip-uptime

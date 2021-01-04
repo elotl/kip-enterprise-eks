@@ -54,4 +54,4 @@ spec:
         - --logtostderr
         - --v=5
         name: kip-uptime
-        image: 689494258501.dkr.ecr.us-east-1.amazonaws.com/elotl/kip-uptime
+        image: elotl/kip-uptime

@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kip-uptime
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kip-uptime
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - nodes
+  - nodes/status
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kip-uptime
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kip-uptime
+subjects:
+- kind: ServiceAccount
+  name: kip-uptime
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kip-uptime
+spec:
+  selector:
+    matchLabels:
+      app: kip-uptime
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kip-uptime
+    spec:
+      serviceAccount: kip-uptime
+      containers:
+      - command:
+        - /kip-uptime
+        - --logtostderr
+        - --v=5
+        name: kip-uptime
+        image: elotl/kip-uptime

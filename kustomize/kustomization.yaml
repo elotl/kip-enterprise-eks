@@ -7,6 +7,7 @@ resources:
 - image-cache-controller.yaml
 - fluentd.yaml
 - cloudwatch.yaml
+- kip-uptime.yaml
 patchesJson6902:
 - target:
     group: apps
@@ -37,6 +38,9 @@ images:
   newTag: ${IMAGE_TAG}
 - name: elotl/kip-aws-meteringagent
   newName: ${IMAGE_REGISTRY}/kip-aws-meteringagent
+  newTag: ${IMAGE_TAG}
+- name: elotl/kip-uptime
+  newName: ${IMAGE_REGISTRY}/kip-uptime
   newTag: ${IMAGE_TAG}
 configMapGenerator:
 - name: config

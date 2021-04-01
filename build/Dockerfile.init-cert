@@ -1,4 +1,4 @@
-FROM elotl/init-cert:v1.0.6 AS base
+FROM elotl/init-cert:v1.1.1 AS base
 
 FROM amazonlinux:latest
 
